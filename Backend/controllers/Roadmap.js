@@ -13,6 +13,7 @@ export const generateRoadmap = async (req, res) => {
     try {
         const { userDescription, userLevel } = req.validatedData;
         const userId = req.userId;
+        
 
         
         console.log(`Validating topic: ${userDescription}`);
