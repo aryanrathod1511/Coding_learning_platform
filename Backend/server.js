@@ -10,7 +10,7 @@ const startServer = async () => {
     try {
         await connectDb();
         await verifyEmailTransporter();
-        app.listen(port, () => {
+        app.listen(port, '0.0.0.0', () => {
             console.log(`Server is running on port ${port}`);
             setInterval(() => {
                 axios.get('https://it314-project.onrender.com/health')
