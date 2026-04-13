@@ -1,7 +1,7 @@
 import UserModel from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { sendMail } from '../config/mailer.js';
+import {transporter} from '../config/mailer.js';
 import crypto from 'crypto';
 import { passwordResetEmail, verificationEmail } from '../utils/emailTemplates.js';
 import { buildEmailVerifyUrl, buildResetPasswordUrl, buildVerifyAccountUrl } from '../utils/urlHelpers.js';
@@ -46,7 +46,7 @@ export const register = async (req, res) => {
         };
 
         try {
-            await sendMail(mailOptions);
+            await transporter.sendMail(mailOptions);
         } catch (emailError) {
             console.error('Error sending email:', emailError);
             return res.status(201).json({
@@ -181,7 +181,7 @@ export const signIn = async (req, res) => {
                 html,
             };
             try {
-                await sendMail(mailOptions);
+                await transporter.sendMail(mailOptions);
             } catch (emailError) {
                 console.error('Error sending email:', emailError);
             }
@@ -281,7 +281,7 @@ export const sendResetToken = async (req, res) => {
         };
 
         try {
-            await sendMail(mailOptions);
+            await transporter.sendMail(mailOptions);
         } catch (emailError) {
             console.error('Error sending email:', emailError);
         }
@@ -326,7 +326,7 @@ export const ResendVerificationToken = async (req, res) => {
         };
 
         try {
-            await sendMail(mailOptions);
+            await transporter.sendMail(mailOptions);
             return res
                 .status(200)
                 .json({ success: true, message: 'Verification email resent. Please check your email.' });
