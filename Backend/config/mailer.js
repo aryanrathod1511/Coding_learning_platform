@@ -1,38 +1,17 @@
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+import sgMail from '@sendgrid/mail';
 
-dotenv.config();
-
-// Create transporter using environment variables
-export const transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE || 'gmail', // e.g., 'gmail', 'outlook', or custom SMTP
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD, // App password, not regular password
-    },
-    // Optional: For custom SMTP server
-    // host: process.env.EMAIL_HOST,
-    // port: process.env.EMAIL_PORT,
-    // secure: true, // true for 465, false for other ports
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendMail = async (mailOptions) => {
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully:', info.response);
-        return info;
-    } catch (error) {
-        console.error('Error sending email:', error);
-        throw error;
-    }
+    const info = await sgMail.send(mailOptions);
+    console.log('Email sent successfully:', info[0].statusCode);
+    return info;
 };
 
 export const verifyEmailTransporter = async () => {
-    try {
-        await transporter.verify();
-        console.log("Email transporter verified successfully.✅");
-    } catch (error) {
-        console.error('Error verifying email transporter:', error);
-        throw error;
+    if (!process.env.SENDGRID_API_KEY) {
+        console.warn('Warning: SENDGRID_API_KEY is not set. Email features will be unavailable.');
+    } else {
+        console.log('Email service (SendGrid) configured successfully.✅');
     }
 };
